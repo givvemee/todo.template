@@ -1,27 +1,67 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // TODO: useState를 import 하세요
+import { useState } from "react";
 
 export default function TodoItem({ todo, onToggle, onDelete, onRename }) {
+  const { id, title, completed } = todo;
+
   // TODO: 수정 모드 상태(isEditing)를 관리할 state를 선언하세요
+  const [isEditing, setIsEditing] = useState(false);
   // TODO: 수정 중인 텍스트(editValue)를 관리할 state를 선언하세요
+  const [editValue, setEditValue] = useState(todo.title);
 
   // TODO: 더블클릭 시 수정 모드로 전환하는 함수를 만드세요
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+  };
 
   // TODO: 키보드 이벤트 핸들러를 만드세요
   // HINT: Enter 키 → 수정 확정, Escape 키 → 수정 취소
+  const handleKeydown = (e) => {
+    if (e.key === "Enter") {
+      onRename(id, editValue);
+      setIsEditing(false);
+    }
+    if (e.key === "Escape") {
+      setEditValue(title);
+      setIsEditing(false);
+    }
+  };
 
   // TODO: 포커스를 잃었을 때(blur) 수정을 확정하는 함수를 만드세요
+  const handleBlur = () => {
+    onRename(id, editValue);
+    setIsEditing(false);
+  };
 
   return (
     <Container>
       {/* TODO: 체크박스를 렌더링하세요 (완료 토글) */}
+      <Checkbox
+        type="checkbox"
+        onClick={() => onToggle(id)}
+        checked={completed}
+      />
 
       {/* TODO: 수정 모드일 때는 입력창, 아닐 때는 텍스트를 보여주세요 */}
       {/* HINT: 조건부 렌더링을 사용하세요 */}
       {/* HINT: 텍스트에 더블클릭 이벤트를 연결하세요 */}
+      {isEditing ? (
+        <EditInput
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onKeyDown={handleKeydown}
+          onBlur={handleBlur}
+        />
+      ) : (
+        <Title onDoubleClick={handleDoubleClick} $completed={completed}>
+          {title}
+        </Title>
+      )}
 
       {/* TODO: 삭제 버튼을 렌더링하세요 */}
+      <DeleteButton onClick={() => onDelete(id)}>삭제</DeleteButton>
     </Container>
   );
 }
@@ -56,7 +96,7 @@ const Title = styled.span`
   color: ${({ $completed, theme }) =>
     $completed ? theme.text.completed : theme.text.primary};
   text-decoration: ${({ $completed }) =>
-    $completed ? 'line-through' : 'none'};
+    $completed ? "line-through" : "none"};
   cursor: default;
   user-select: none;
 `;
