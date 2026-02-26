@@ -1,16 +1,20 @@
-import styled from 'styled-components';
-import TodoItem from './TodoItem';
+import styled from "styled-components";
+import TodoItem from "./TodoItem";
 
 export default function TodoList({ todos, onToggle, onDelete, onRename }) {
-  // TODO: todos 배열이 비어있을 때 안내 메시지를 보여주세요
-
-  // TODO: todos 배열을 순회하며 TodoItem 컴포넌트를 렌더링하세요
-  // HINT: map 함수를 사용하세요
-  // HINT: 각 TodoItem에 key prop과 필요한 핸들러 props를 전달하세요
+  if (!todos.length) return <EmptyMessage>todos.length === 0</EmptyMessage>;
 
   return (
     <List>
-      {/* 여기에 TodoItem 목록을 렌더링하세요 */}
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+          onRename={onRename}
+        />
+      ))}
     </List>
   );
 }
