@@ -28,21 +28,23 @@ export default function TodoItem({ todo, onToggle, onDelete, onRename }) {
 
   // TODO: 포커스를 잃었을 때(blur) 수정을 확정하는 함수를 만드세요
   const handleUpdate = () => {
+    onRename(todo.id,editValue);
+    setIsEditing(false);
 
   };
 
   return (
     <Container>
       {/* TODO: 체크박스를 렌더링하세요 (완료 토글) */}
-      <Checkbox type="checkbox" checked={todo.completed} onToggle={onToggle}></Checkbox>
+      <Checkbox type="checkbox" checked={todo.completed} onChange={()=>onToggle(todo.id)}></Checkbox>
 
       {
         /* TODO: 수정 모드일 때는 입력창, 아닐 때는 텍스트를 보여주세요 */
 
         isEditing ? (
-          <EditInput onBlur={handleUpdate} ></EditInput>
+          <EditInput value={editValue} onChange={(e)=> setEditValue(e.target.value)} onBlur={handleUpdate} onKeyDown={handleKeybord} ></EditInput>
         ) : (
-          <Title onDoubleClick={handleDoubleClick} ></Title>
+          <Title onDoubleClick={handleDoubleClick} $completed={todo.completed} >{todo.title}</Title>
         )
       }
       {/* HINT: 조건부 렌더링을 사용하세요 */}
