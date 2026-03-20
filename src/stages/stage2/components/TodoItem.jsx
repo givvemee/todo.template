@@ -1,26 +1,51 @@
-import styled from 'styled-components';
-
-// TODO: useState를 import 하세요
+import styled from "styled-components";
+import { useState } from "react";
 
 export default function TodoItem({ todo, onToggle, onDelete, onRename }) {
-  // TODO: 수정 모드 상태(isEditing)와 수정 텍스트(editValue) state를 선언하세요
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(todo.title);
 
-  // TODO: 더블클릭 시 수정 모드로 전환하는 함수를 만드세요
+  function handleDoubleClick() {
+    setIsEditing(true);
+  }
 
-  // TODO: 키보드 이벤트 핸들러를 만드세요 (Enter: 확정, Escape: 취소)
+  function handleBlur() {
+    if (editValue) onRename(todo.id, editValue);
 
-  // TODO: blur 이벤트 핸들러를 만드세요
+    setIsEditing(false);
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") handleBlur();
+    else if (e.key === "Escape") {
+      setEditValue(todo.title);
+      setIsEditing(false);
+    }
+  }
 
   return (
-    <Container>
-      {/* TODO: 체크박스를 렌더링하세요 */}
+    <Container completed={todo.completed}>
+      <Checkbox
+        type="checkbox"
+        checked={todo.completed}
+        onChange={() => onToggle(todo.id)}
+      />
 
-      {/* TODO: 우선순위 배지를 렌더링하세요 */}
-      {/* HINT: PriorityBadge 컴포넌트에 $priority prop을 전달하세요 */}
+      {isEditing ? (
+        <EditInput
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      ) : (
+        <Title completed={todo.completed} onDoubleClick={handleDoubleClick}>
+          {todo.title}
+        </Title>
+      )}
 
-      {/* TODO: 수정 모드에 따라 EditInput 또는 Title을 렌더링하세요 */}
-
-      {/* TODO: 삭제 버튼을 렌더링하세요 */}
+      <DeleteButton onClick={() => onDelete(todo.id)}>삭제</DeleteButton>
     </Container>
   );
 }
@@ -49,23 +74,13 @@ const Checkbox = styled.input`
   accent-color: ${({ theme }) => theme.accent.primary};
 `;
 
-const PriorityBadge = styled.span`
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #ffffff;
-  background: ${({ $priority, theme }) => theme.priority[$priority]};
-  white-space: nowrap;
-`;
-
 const Title = styled.span`
   flex: 1;
   font-size: 0.95rem;
   color: ${({ $completed, theme }) =>
     $completed ? theme.text.completed : theme.text.primary};
   text-decoration: ${({ $completed }) =>
-    $completed ? 'line-through' : 'none'};
+    $completed ? "line-through" : "none"};
   cursor: default;
   user-select: none;
 `;
