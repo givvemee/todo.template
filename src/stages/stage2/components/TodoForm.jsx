@@ -1,26 +1,32 @@
-import styled from 'styled-components';
-
-// TODO: useState를 import 하세요
+import styled from "styled-components";
+import { useState } from "react";
 
 export default function TodoForm({ onAdd }) {
-  // TODO: 입력값(title)을 관리할 state를 선언하세요
-  // TODO: 우선순위(priority)를 관리할 state를 선언하세요 (기본값: 'medium')
+  const [inputText, setInputText] = useState("");
+  const [priority, setPriority] = useState("medium");
 
-  // TODO: 폼 제출 핸들러를 만드세요
-  // HINT: onAdd 호출 시 title과 priority를 함께 전달하세요
-  // HINT: 제출 후 입력값과 우선순위를 초기화하세요
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!inputText.trim()) return;
+
+    onAdd(inputText, priority);
+    setInputText("");
+    setPriority("medium");
+  }
 
   return (
-    <Form>
-      {/* TODO: onSubmit 이벤트를 연결하세요 */}
+    <Form onSubmit={handleSubmit}>
       <InputRow>
         <Input
           type="text"
           placeholder="할 일을 입력하세요"
-          // TODO: value와 onChange를 연결하세요
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
         />
-        <PrioritySelect>
-          {/* TODO: value와 onChange를 연결하세요 */}
+        <PrioritySelect
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+        >
           <option value="high">높음</option>
           <option value="medium">보통</option>
           <option value="low">낮음</option>
@@ -31,7 +37,6 @@ export default function TodoForm({ onAdd }) {
   );
 }
 
-// ===== 아래는 스타일 코드입니다. 수정하지 않아도 됩니다. =====
 const Form = styled.form`
   margin-bottom: 20px;
 `;
