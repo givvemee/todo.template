@@ -1,7 +1,12 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // HINT: 필터 옵션 배열을 만들어 활용하면 편리합니다
 // 예) [{ value: 'all', label: '전체' }, ...]
+const filterOptions = [
+  { value: "all", label: "전체" },
+  { value: "active", label: "미완료" },
+  { value: "completed", label: "완료" },
+];
 
 export default function FilterBar({ filter, onFilterChange }) {
   // TODO: 필터 옵션들을 버튼으로 렌더링하세요
@@ -11,6 +16,15 @@ export default function FilterBar({ filter, onFilterChange }) {
   return (
     <Container>
       {/* 여기에 필터 버튼들을 렌더링하세요 */}
+      {filterOptions.map((option) => (
+        <FilterButton
+          key={option.value}
+          $active={filter === option.value}
+          onClick={() => onFilterChange(option.value)}
+        >
+          {option.label}
+        </FilterButton>
+      ))}
     </Container>
   );
 }
@@ -29,10 +43,9 @@ const FilterButton = styled.button`
   background: ${({ $active, theme }) =>
     $active ? theme.accent.primary : theme.bg.secondary};
   color: ${({ $active, theme }) =>
-    $active ? '#ffffff' : theme.text.secondary};
+    $active ? "#ffffff" : theme.text.secondary};
   border: 1px solid
-    ${({ $active, theme }) =>
-      $active ? theme.accent.primary : theme.border};
+    ${({ $active, theme }) => ($active ? theme.accent.primary : theme.border)};
   transition: all ${({ theme }) => theme.transition};
 
   &:hover {
