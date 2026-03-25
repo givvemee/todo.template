@@ -1,26 +1,68 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // TODO: useState를 import 하세요
+import { useState } from "react";
+
+const PRIORITY_LABEL = {
+  high: "높음",
+  medium: "보통",
+  low: "낮음",
+};
 
 export default function TodoItem({ todo, onToggle, onDelete, onRename }) {
+  const { id, title, completed, priority } = todo;
   // TODO: 수정 모드 상태(isEditing)와 수정 텍스트(editValue) state를 선언하세요
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(title);
   // TODO: 더블클릭 시 수정 모드로 전환하는 함수를 만드세요
-
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+  };
   // TODO: 키보드 이벤트 핸들러를 만드세요 (Enter: 확정, Escape: 취소)
-
+  const handleKeyboard = (e) => {
+    if (e.key === "Enter") {
+      onRename(id, editValue);
+      setIsEditing(false);
+    }
+    if (e.key === "Escape") {
+      setEditValue(todo.title);
+      setIsEditing(false);
+    }
+  };
   // TODO: blur 이벤트 핸들러를 만드세요
+  const handleBlur = () => {
+    onRename(id, editValue);
+    setIsEditing(false);
+  };
 
   return (
     <Container>
       {/* TODO: 체크박스를 렌더링하세요 */}
-
+      <Checkbox
+        type="checkbox"
+        onClick={() => onToggle(id)}
+        checked={completed}
+      />
       {/* TODO: 우선순위 배지를 렌더링하세요 */}
       {/* HINT: PriorityBadge 컴포넌트에 $priority prop을 전달하세요 */}
-
+      <PriorityBadge $priority={priority}>
+        {PRIORITY_LABEL[priority]}
+      </PriorityBadge>
       {/* TODO: 수정 모드에 따라 EditInput 또는 Title을 렌더링하세요 */}
-
+      {isEditing ? (
+        <EditInput
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onKeyDown={handleKeyboard}
+          onBlur={handleBlur}
+        />
+      ) : (
+        <Title onDoubleClick={handleDoubleClick} $completed={completed}>
+          {title}
+        </Title>
+      )}
       {/* TODO: 삭제 버튼을 렌더링하세요 */}
+      <DeleteButton onClick={() => onDelete(id)}>삭제</DeleteButton>
     </Container>
   );
 }
@@ -65,7 +107,7 @@ const Title = styled.span`
   color: ${({ $completed, theme }) =>
     $completed ? theme.text.completed : theme.text.primary};
   text-decoration: ${({ $completed }) =>
-    $completed ? 'line-through' : 'none'};
+    $completed ? "line-through" : "none"};
   cursor: default;
   user-select: none;
 `;
