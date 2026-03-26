@@ -1,14 +1,22 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 // HINT: 정렬 옵션 배열을 만들어 활용하면 편리합니다
 // 예) [{ value: 'createdAt', label: '생성일자순' }, ...]
+const SORT_OPTIONS = [
+  { value: "createdAt", label: "날짜순" },
+  { value: "priority", label: "우선순위순" },
+  { value: "title", label: "가나다순" },
+];
 
 export default function SortDropdown({ sortBy, onSortChange }) {
   // TODO: select 요소의 value와 onChange를 연결하세요
   // TODO: 정렬 옵션들을 option 태그로 렌더링하세요
 
   return (
-    <Select>
+    <Select value={sortBy} onChange={onSortChange}>
+      {SORT_OPTIONS.map((option) => (
+        <option key={option.value} value={option.value}>{option.label}</option>
+      ))}
       {/* 여기에 option 태그들을 렌더링하세요 */}
     </Select>
   );
