@@ -2,7 +2,10 @@ import styled from 'styled-components';
 
 // HINT: 필터 옵션 배열을 만들어 활용하면 편리합니다
 // 예) [{ value: 'all', label: '전체' }, ...]
-
+const FILTER_OPTIONS=[{ value: 'all', label: '전체' },
+  { value: 'active', label: '미완료' },
+  { value: 'completed', label: '완료' }
+]
 export default function FilterBar({ filter, onFilterChange }) {
   // TODO: 필터 옵션들을 버튼으로 렌더링하세요
   // HINT: 현재 선택된 필터와 비교하여 활성 상태를 표시하세요
@@ -11,6 +14,9 @@ export default function FilterBar({ filter, onFilterChange }) {
   return (
     <Container>
       {/* 여기에 필터 버튼들을 렌더링하세요 */}
+      {FILTER_OPTIONS.map((option)=>
+      <FilterButton key={option.value} $active={filter === option.value} value={option.value} onClick={onFilterChange}>{option.label}</FilterButton>
+      )}
     </Container>
   );
 }

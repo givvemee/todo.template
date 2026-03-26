@@ -1,25 +1,36 @@
 import styled from 'styled-components';
 
 // TODO: useState를 import 하세요
+import {useState} from 'react';
 
 export default function TodoForm({ onAdd }) {
   // TODO: 입력값(title)을 관리할 state를 선언하세요
+  const [title, setTitle] = useState('');
   // TODO: 우선순위(priority)를 관리할 state를 선언하세요 (기본값: 'medium')
+  const [priority, setPriority] = useState('medium');
 
   // TODO: 폼 제출 핸들러를 만드세요
   // HINT: onAdd 호출 시 title과 priority를 함께 전달하세요
   // HINT: 제출 후 입력값과 우선순위를 초기화하세요
+  const handleSubmitForm=(e)=>{
+    e.preventDefault();
+    onAdd(title, priority);
+    setTitle('');
+    setPriority('medium');
+  }
 
   return (
-    <Form>
+    <Form onSubmit={handleSubmitForm}>
       {/* TODO: onSubmit 이벤트를 연결하세요 */}
       <InputRow>
         <Input
           type="text"
           placeholder="할 일을 입력하세요"
           // TODO: value와 onChange를 연결하세요
+          value={title}
+          onChange={(e)=>setTitle(e.target.value)}
         />
-        <PrioritySelect>
+        <PrioritySelect value={priority} onChange={(e)=>setPriority(e.target.value)}>
           {/* TODO: value와 onChange를 연결하세요 */}
           <option value="high">높음</option>
           <option value="medium">보통</option>
